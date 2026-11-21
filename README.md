@@ -1,2 +1,5 @@
 # AI CAREER ASSISTANT
-AI Career Assistant is an AI-powered platform that analyzes CVs, identifies suitable job opportunities, highlights missing skills, suggests CV improvements, and provides mock interview practice to help job seekers prepare for their careers.
+
+AI Career Assistant is an AI-powered platform that analyzes CVs, identifies relevant job opportunities, highlights skill gaps, suggests CV improvements, and provides live mock interview practice to help job seekers advance their careers.
+
+## Problem Statement
