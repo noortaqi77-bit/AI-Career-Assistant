@@ -288,9 +288,9 @@ with tab2:
         with col_noor:
             with st.container(key="noor_box"):
                 with st.container(key="noor_idle"):
-                    st.image("noor_idle.png",width=150)
+                   st.image("images/noor_idle.png",width=150)
                 with st.container(key="noor_gif"):
-                    st.image("noor_talk.gif",width=150)
+                    st.image("images/noor_talk.gif",width=150)
         components.html('<script>const p=window.parent.document;setInterval(()=>{const au=[...p.querySelectorAll(".st-key-noor_audio audio")];const m=p.querySelector(".st-key-noor_box");if(m){if(au.some(x=>!x.paused)){m.classList.add("talk")}else{m.classList.remove("talk")}}},300)</script>', height=0)
 
         with col_cam:
