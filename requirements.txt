@@ -1,1 +1,9 @@
-
+streamlit
+streamlit-webrtc
+openai
+requests
+numpy
+PyMuPDF
+python-docx
+SpeechRecognition
+pdf2docx
