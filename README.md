@@ -38,7 +38,7 @@ The system uses Large Language Models (LLM) to interpret extracted CV informatio
 ## Evaluation results & baseline comparison 
 
 
-## How to run the project (env setup, dependencies, step-by-step commands) 
+## How to run the project 
 
 1. Clone the repository:
 
@@ -60,3 +60,33 @@ pip install -r requirements.txt
 ```bash
 streamlit run cv_app.py
 ```
+## Repo structure 
+ai-career-assistant/
+├── cv_app.py
+├── function_app.py
+├── requirements.txt
+├── notebook.ipynb
+├── images/
+│   ├── noor_idle.png
+│   └── noor_talk.gif
+├── presentation/
+│   ├── slides.pptx
+│   └── demo.mp4
+├── .gitignore
+└── README.md
+
+## Limitations
+-The application relies on a free-tier language model, which may result in response delays or temporary service unavailability due to usage restrictions.
+-AI-generated CV recommendations may not always be fully accurate or relevant and should be reviewed by users before implementation.
+-Editing PDF-based CVs requires conversion to Word format, which may affect the original document's formatting and layout.
+The speech recognition feature is currently limited to English and does not support other languages.
+  
+## Future work
+ -Collect jobs on a schedule and store them in a CSV file or database.
+- Add body-language and voice feedback to the interview.
+- Export a downloadable interview report.
+- Introduce additional interview assessment features to provide more comprehensive feedback.
+
+## Screenshots & Demo
+
+**Demo video:** [Watch the demo](https://www.youtube.com/watch?v=QPtWgWxouJg&feature=youtu.be)
