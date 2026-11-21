@@ -11,6 +11,7 @@ AI Career Assistant uses two main data sources:
 - CV Data: User-uploaded CVs in PDF format, which are processed to extract information such as education, work experience, skills, and certifications.
   
 - Job Listings ( JSearch API): Job postings are retrieved through the JSearch API, which provides structured information such as job titles, company names, descriptions, locations, and employment requirements. These listings are used to identify relevant opportunities and evaluate the alignment between candidate qualifications and job requirements.
+  
     source=(https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch)
 
 
@@ -18,6 +19,7 @@ Uploaded CVs are processed during the session only and are not stored in this re
 
 ## Model architecture
 No model is trained in this project. It uses pre-trained models through APIs.
+The system uses Large Language Models (LLM) to interpret extracted CV information, analyse job descriptions, identify skill gaps, generate CV improvement recommendations, and evaluate interview responses.
 
 | Component | Model / Tool | Role |
 |---|---|---|
@@ -27,4 +29,34 @@ No model is trained in this project. It uses pre-trained models through APIs.
 | Live audio and video | `streamlit-webrtc` | Microphone and camera in the browser |
 | CV reading and editing | PyMuPDF, python-docx, pdf2docx | Read PDF/DOCX, edit and export Word |
 
+**Pipeline**
 
+- **Tab 1:** CV → skills → JSearch jobs → match score
+- **Tab 2:** job + CV → interviewer question → voice (TTS) → spoken answer → text (STT) → next question → final evaluation (clarity, confidence, relevance, feedback)
+- **Tab 3:** CV → feedback → edit suggestions (original / suggestion / reason) → user accepts edits → edited Word file
+
+## Evaluation results & baseline comparison 
+
+
+## How to run the project (env setup, dependencies, step-by-step commands) 
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/[YOUR-USERNAME]/ai-career-assistant.git
+cd ai-career-assistant
+```
+
+2. Install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+3. Create `.streamlit/secrets.toml` and add `OPENROUTER_KEY`, `HEYGEN_KEY` and `JSEARCH_KEY`.
+
+4. Run the app:
+
+```bash
+streamlit run cv_app.py
+```
