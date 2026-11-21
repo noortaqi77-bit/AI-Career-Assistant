@@ -62,17 +62,29 @@ streamlit run cv_app.py
 ```
 ## Repo structure 
 ai-career-assistant/
+
 ├── cv_app.py
+
 ├── function_app.py
+
 ├── requirements.txt
+
 ├── notebook.ipynb
+
 ├── images/
+
 │   ├── noor_idle.png
+
 │   └── noor_talk.gif
+
 ├── presentation/
+
 │   ├── slides.pptx
+
 │   └── demo.mp4
+
 ├── .gitignore
+
 └── README.md
 
 ## Limitations
