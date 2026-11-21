@@ -294,7 +294,7 @@ with tab2:
         components.html('<script>const p=window.parent.document;setInterval(()=>{const au=[...p.querySelectorAll(".st-key-noor_audio audio")];const m=p.querySelector(".st-key-noor_box");if(m){if(au.some(x=>!x.paused)){m.classList.add("talk")}else{m.classList.remove("talk")}}},300)</script>', height=0)
 
         with col_cam:
-            webrtc_streamer(key="cam",media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
+            webrtc_streamer(key="cam", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
         
         if i not in st.session_state.audio:
             st.session_state.audio[i]=speak(question)
@@ -313,7 +313,7 @@ with tab2:
             if not finished:
                 st.markdown('<style>.st-key-mic_box{display:none}</style>', unsafe_allow_html=True)
                 with st.container(key="mic_box"):
-                    ctx=webrtc_streamer(key="mic",mode=WebRtcMode.SENDONLY,audio_receiver_size=1024, media_stream_constraints={"video": False, "audio": True}, desired_playing_state=True)           
+                    ctx=webrtc_streamer(key="mic", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, mode=WebRtcMode.SENDONLY, audio_receiver_size=1024, media_stream_constraints={"video": False, "audio": True}, desired_playing_state=True)
             answer=None
             if i not in st.session_state.answers and ctx.state.playing:
                 note=st.empty()
