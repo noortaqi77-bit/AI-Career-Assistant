@@ -9,8 +9,22 @@ Job seekers need more than a CV to navigate the recruitment process. They need t
 AI Career Assistant uses two main data sources:
 
 - CV Data: User-uploaded CVs in PDF format, which are processed to extract information such as education, work experience, skills, and certifications.
-
-- Job Listings: Job postings retrieved through the JSearch API, providing job titles, descriptions, company information, and requirements.
-
-  source=(https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch)
   
+- Job Listings ( JSearch API): Job postings are retrieved through the JSearch API, which provides structured information such as job titles, company names, descriptions, locations, and employment requirements. These listings are used to identify relevant opportunities and evaluate the alignment between candidate qualifications and job requirements.
+    source=(https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch)
+
+
+Uploaded CVs are processed during the session only and are not stored in this repository.
+
+## Model architecture
+No model is trained in this project. It uses pre-trained models through APIs.
+
+| Component | Model / Tool | Role |
+|---|---|---|
+| Language model | `baidu/ernie-5.5-flash-preview:free` via OpenRouter | Interviewer questions, answer evaluation, CV feedback, CV edit suggestions |
+| Text-to-speech | HeyGen `heygen-voice-1-turbo-free` | Interviewer voice (Noor) |
+| Speech-to-text | Google Speech Recognition via `SpeechRecognition` | Converts spoken answers to text |
+| Live audio and video | `streamlit-webrtc` | Microphone and camera in the browser |
+| CV reading and editing | PyMuPDF, python-docx, pdf2docx | Read PDF/DOCX, edit and export Word |
+
+
