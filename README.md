@@ -88,13 +88,13 @@ ai-career-assistant/
 └── README.md
 
 ## Limitations
--The application relies on a free-tier language model, which may result in response delays or temporary service unavailability due to usage restrictions.
--AI-generated CV recommendations may not always be fully accurate or relevant and should be reviewed by users before implementation.
--Editing PDF-based CVs requires conversion to Word format, which may affect the original document's formatting and layout.
-The speech recognition feature is currently limited to English and does not support other languages.
+- The application relies on a free-tier language model, which may result in response delays or temporary service unavailability due to usage restrictions.
+- AI-generated CV recommendations may not always be fully accurate or relevant and should be reviewed by users before implementation.
+- Editing PDF-based CVs requires conversion to Word format, which may affect the original document's formatting and layout.
+- The speech recognition feature is currently limited to English and does not support other languages.
   
 ## Future work
- -Collect jobs on a schedule and store them in a CSV file or database.
+- Collect jobs on a schedule and store them in a CSV file or database.
 - Add body-language and voice feedback to the interview.
 - Export a downloadable interview report.
 - Introduce additional interview assessment features to provide more comprehensive feedback.
@@ -102,3 +102,5 @@ The speech recognition feature is currently limited to English and does not supp
 ## Screenshots & Demo
 
 **Demo video:** [Watch the demo](https://www.youtube.com/watch?v=QPtWgWxouJg&feature=youtu.be)
+
+## 
