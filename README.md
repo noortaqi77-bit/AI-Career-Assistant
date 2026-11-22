@@ -35,7 +35,13 @@ The system uses Large Language Models (LLM) to interpret extracted CV informatio
 - **Tab 2:** job + CV → interviewer question → voice (TTS) → spoken answer → text (STT) → next question → final evaluation (clarity, confidence, relevance, feedback)
 - **Tab 3:** CV → feedback → edit suggestions (original / suggestion / reason) → user accepts edits → edited Word file
 
-## Evaluation results & baseline comparison 
+## Evaluation results
+
+Precision: 66.3%
+
+Recall: 77.7%
+
+F1: 71.6%
 
 
 ## How to run the project 
