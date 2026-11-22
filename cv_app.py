@@ -15,6 +15,8 @@ import speech_recognition as sr
 import streamlit.components.v1 as components
 from pdf2docx import Converter
 from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy, live_listen
+import av
+
 
 st.markdown("""
 <style>
