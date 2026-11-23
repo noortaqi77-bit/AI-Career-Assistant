@@ -127,7 +127,7 @@ with tab1:
            If the candidate has closely related experience for a skill, count it as matched.
            Only skills written in the job description: tools, techniques, soft skills, years or degree requirements. No job titles.
            Candidate: {json.dumps(cv_data)}
-            Jobs: {json.dumps([{"title": j["title"],"description": j["description"][:1500]} for j in jobs_raw])}"""
+            Jobs: {json.dumps([{"title": j["title"],"description": j["description"][:2500]} for j in jobs_raw])}"""
             
             result=None
         # because it make error or none sometime,
