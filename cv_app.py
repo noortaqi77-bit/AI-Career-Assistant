@@ -299,6 +299,16 @@ with tab2:
         with col_cam:
             webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
             # webrtc_streamer(key="cam", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
+        live=True
+        if live:
+            finished=(i==total-1 and i in st.session_state.answers)
+            if not finished:
+                st.markdown('<style>.st-key-mic_box{display:none}</style>', unsafe_allow_html=True)
+                with st.container(key="mic_box"):
+                    ctx=webrtc_streamer(key="mic",rtc_configuration=RTC,mode=WebRtcMode.SENDONLY,audio_receiver_size=1024, media_stream_constraints={"video": False, "audio": True}, desired_playing_state=True)
+                    
+        
+        
         
         if i not in st.session_state.audio:
             st.session_state.audio[i]=speak(question)
@@ -311,13 +321,12 @@ with tab2:
 
 
         # voice part , using stt:
-        live=True
         if live:
-            finished=(i==total-1 and i in st.session_state.answers)
-            if not finished:
-                st.markdown('<style>.st-key-mic_box{display:none}</style>', unsafe_allow_html=True)
-                with st.container(key="mic_box"):
-                    ctx=webrtc_streamer(key="mic",rtc_configuration=RTC,mode=WebRtcMode.SENDONLY,audio_receiver_size=1024, media_stream_constraints={"video": False, "audio": True}, desired_playing_state=True)
+        #     finished=(i==total-1 and i in st.session_state.answers)
+        #     if not finished:
+        #         st.markdown('<style>.st-key-mic_box{display:none}</style>', unsafe_allow_html=True)
+        #         with st.container(key="mic_box"):
+        #             ctx=webrtc_streamer(key="mic",rtc_configuration=RTC,mode=WebRtcMode.SENDONLY,audio_receiver_size=1024, media_stream_constraints={"video": False, "audio": True}, desired_playing_state=True)
                     # ctx=webrtc_streamer(key="mic", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, mode=WebRtcMode.SENDONLY, audio_receiver_size=1024, media_stream_constraints={"video": False, "audio": True}, desired_playing_state=True)
             answer=None
             if i not in st.session_state.answers and ctx.state.playing:
