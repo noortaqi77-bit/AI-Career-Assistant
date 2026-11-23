@@ -16,6 +16,7 @@ import streamlit.components.v1 as components
 from pdf2docx import Converter
 from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy, live_listen
 import av
+from trafilatura import fetch_url,extract
 
 
 st.markdown("""
@@ -198,7 +199,14 @@ with tab1:
                       '</div>')
                 st.markdown(card, unsafe_allow_html=True)
 
-                
+
+@st.cache_data(show_spinner=False)
+def job_text_from_link(url):
+    try:
+        page=fetch_url(url)
+        return (extract(page) or "") if page else ""
+    except Exception:
+        return ""            
 
 with tab2:
     st.write("Mock Interview tab")
@@ -215,8 +223,18 @@ with tab2:
         # second thing is by user's job , and i made the cv is optional <
         elif source=="Enter a job":
             custom_title=st.text_input("Job title")
-            custom_desc=st.text_area("Paste the job description here")
-            chose={"title": custom_title or "Not specified (infer the job from the description below)", "company": "Not specified", "description": custom_desc} if custom_desc else None  
+            job_url=st.text_input("Job link (optional)")
+            custom_desc=st.text_area("Or paste the job description here")
+            if job_url and not custom_desc:
+                custom_desc=job_text_from_link(job_url)
+                if not custom_desc:
+                    st.warning("Could not read this link. Please paste the job description instead.")
+           
+            # chose={"title": custom_title or "Not specified (infer the job from the description below)", "company": "Not specified", "description": custom_desc} if custom_desc else None
+            # custom_title=st.text_input("Job title")
+            # custom_desc=st.text_area("Paste the job description here")
+            # chose={"title": custom_title or "Not specified (infer the job from the description below)", "company": "Not specified", "description": custom_desc} if custom_desc else None  
+            chose={"title": custom_title or "Not specified (infer the job from the description below)", "company": "Not specified", "description": custom_desc} if custom_desc else None
 
         else:
             chose={"title":"General interview", "company": "Not specified", "description": "No specific job.Ask general interview questions based on the CV."}
