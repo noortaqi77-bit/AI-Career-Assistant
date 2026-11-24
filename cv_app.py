@@ -185,7 +185,7 @@ with tab1:
                         break
             # calc the % of each job :
                 job["final_percent"]=round(100 *n_yes/(n_yes+n_x)) if (n_yes+ n_x) else None
-                result=sorted(result, key=lambda job: job["final_percent"] or 0, reverse=True)
+            result=sorted(result, key=lambda job: job["final_percent"] or 0, reverse=True)
 
 
             # new :
