@@ -14,7 +14,7 @@ import numpy as np
 import speech_recognition as sr
 import streamlit.components.v1 as components
 from pdf2docx import Converter
-from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy
+from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy,live_listen
 from trafilatura import fetch_url,extract
 
 
@@ -185,6 +185,8 @@ with tab1:
                         break
             # calc the % of each job :
                 job["final_percent"]=round(100 *n_yes/(n_yes+n_x)) if (n_yes+ n_x) else None
+                result=sorted(result, key=lambda job: job["final_percent"] or 0, reverse=True)
+
 
             # new :
             st.session_state.top_jobs=[]
@@ -296,6 +298,7 @@ with tab2:
             st.session_state.q_index=0
             st.session_state.answers={}
             st.session_state.audio={}
+            st.session_state.audio[0]=speak(st.session_state.history[-1]["content"])
             st.session_state.start_time=time.time()
             st.rerun()
 
@@ -306,7 +309,9 @@ with tab2:
         question=st.session_state.history[-1]["content"]
         total=5
         pct=round((i+1)/total*100)
-        st.markdown('<div class="qmeta">Question '+str(i+1)+' of '+str(total)+'</div><div class="bar"><div style="width:'+str(pct)+'%"></div></div><div class="qcard">'+question+'</div>', unsafe_allow_html=True)        #st.write("Question", i+1,"of",len(st.session_state.questions),":", question)
+        q_slot=st.empty()
+        q_html='<div class="qmeta">Question '+str(i+1)+' of '+str(total)+'</div><div class="bar"><div style="width:'+str(pct)+'%"></div></div><div class="qcard">'+question+'</div>'
+        # st.markdown('<div class="qmeta">Question '+str(i+1)+' of '+str(total)+'</div><div class="bar"><div style="width:'+str(pct)+'%"></div></div><div class="qcard">'+question+'</div>', unsafe_allow_html=True)        #st.write("Question", i+1,"of",len(st.session_state.questions),":", question)
 
         # the mic
         # to make side for camera and side for mic
@@ -326,7 +331,8 @@ with tab2:
         
         RTC={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
         with col_cam:
-             webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
+            cam=webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
+             # webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
             # webrtc_streamer(key="cam", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
         live=True
         if live:
@@ -373,6 +379,7 @@ with tab2:
         if live and answer and i<total-1:
             st.session_state.history.append({"role": "user", "content": st.session_state.answers[i]})
             st.session_state.history.append({"role": "assistant", "content": interviewer_reply(st.session_state.history,st.session_state.job["title"], st.session_state.job["description"], st.session_state.cv_part,st.session_state.level) or "Can you tell me more about your experience?"})
+            st.session_state.audio[i+1]=speak(st.session_state.history[-1]["content"])
             st.session_state.q_index+=1
             st.rerun()
 
@@ -383,6 +390,7 @@ with tab2:
                     st.session_state.history.append({"role": "user", "content": st.session_state.answers[i]})
                     #
                     st.session_state.history.append({"role": "assistant", "content": interviewer_reply(st.session_state.history,st.session_state.job["title"], st.session_state.job["description"], st.session_state.cv_part,st.session_state.level) or "Can you tell me more about your experience?"})
+                    st.session_state.audio[i+1]=speak(st.session_state.history[-1]["content"])
                     st.session_state.q_index+=1
                     st.rerun()
                 else:
