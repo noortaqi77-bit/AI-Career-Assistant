@@ -226,7 +226,7 @@ def body_frame_callback(frame):
             # head = the width of the head (distance between the ears) , used as a ruler
             head=abs(p[7].x-p[8].x)
             if head>0:
-                # only the wrists that MediaPipe can really see in the picture
+                #only the wrists that MediaPipe can really see in the picture
                 wrists=[w for w in (p[15],p[16]) if w.visibility>0.5]
                 with body_lock:
                     body_data["seen"]+=1
@@ -236,11 +236,11 @@ def body_frame_callback(frame):
                     # hands : at least one wrist is visible
                     if wrists:
                         body_data["hands"]+=1
-                    # touching the face : a wrist is closer to the nose than the width of the head
+                    # touching the face: a wrist is closer to the nose than the width of the head
                     if any(math.hypot(w.x-p[0].x,w.y-p[0].y)<head for w in wrists):
                         body_data["touch"]+=1
     except Exception:
-        # a failed frame must never stop the camera
+        #a failed frame must never stop the camera
         pass
     return frame
 
@@ -261,4 +261,16 @@ def body_feedback():
         d=dict(body_data)
     # nobody was analysed [no camera, no mediapipe, or the body was not visible] will show nothing
     if d["seen"]==0:
+        return ""
+    pct=lambda x: round(100*x/d["seen"])
+    numbers={"looking_away_from_camera_percent":pct(d["away"]),
+             "hands_visible_percent":pct(d["hands"]),
+             "hand_near_face_percent":pct(d["touch"])}
+    prompt=("You are an interview coach. Measurements from the candidate's webcam during a mock interview: "+str(numbers)+". "
+            "Write 3 short sentences of body-language feedback in the second person about looking at the camera, hands, and touching the face, "
+            "based ONLY on these numbers. Do not mention the numbers themselves.")
+    try:
+        r=client.with_options(max_retries=3).chat.completions.create(model=MODEL,messages=[{"role":"user","content":prompt}],max_tokens=300)
+        return (r.choices[0].message.content or "").strip()
+    except Exception:
         return ""
