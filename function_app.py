@@ -197,3 +197,25 @@ try:
         mp.tasks.vision.PoseLandmarkerOptions(base_options=mp.tasks.BaseOptions(model_asset_path=POSE_FILE)))
 except Exception:
     landmarker=None
+
+
+
+
+body_lock=threading.Lock()
+body_data={"n":0,"seen":0,"tilt":0.0,"away":0,"hands":0,"touch":0}
+
+def reset_body_data():
+    with body_lock:
+        for k in body_data:
+            body_data[k]=0
+
+
+
+
+#called after Submit Interview -> turns the counters into percentages and asks the LLM for the sentences
+def body_feedback():
+    with body_lock:
+        d=dict(body_data)
+    # nobody was analysed [no camera, no mediapipe, or the body was not visible] will show nothing
+    if d["seen"]==0:
+        return ""
