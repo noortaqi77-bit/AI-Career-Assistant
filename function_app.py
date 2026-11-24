@@ -199,8 +199,6 @@ except Exception:
     landmarker=None
 
 
-
-
 body_lock=threading.Lock()
 body_data={"n":0,"seen":0,"tilt":0.0,"away":0,"hands":0,"touch":0}
 
@@ -210,6 +208,51 @@ def reset_body_data():
             body_data[k]=0
 
 
+
+ runs on every camera frame ; it only measures and returns the frame as it is
+def body_frame_callback(frame):
+    
+    body_data["n"]+=1
+    # analyse only every 5th frame so the video does not get slow
+    if landmarker is None or body_data["n"]%5!=0:
+        return frame
+    try:
+        # the frame as an RGB picture , then MediaPipe finds the body points
+        rgb=frame.to_ndarray(format="rgb24")
+        result=landmarker.detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb))
+        if result.pose_landmarks:
+            p=result.pose_landmarks[0]
+            # point numbers from MediaPipe : 0 nose , 7 and 8 ears , 15 and 16 wrists
+            # head = the width of the head (distance between the ears) , used as a ruler
+            head=abs(p[7].x-p[8].x)
+            if head>0:
+                # only the wrists that MediaPipe can really see in the picture
+                wrists=[w for w in (p[15],p[16]) if w.visibility>0.5]
+                with body_lock:
+                    body_data["seen"]+=1
+                    # looking away : the nose is far from the middle of the two ears
+                    if abs(p[0].x-(p[7].x+p[8].x)/2)/head>0.25:
+                        body_data["away"]+=1
+                    # hands : at least one wrist is visible
+                    if wrists:
+                        body_data["hands"]+=1
+                    # touching the face : a wrist is closer to the nose than the width of the head
+                    if any(math.hypot(w.x-p[0].x,w.y-p[0].y)<head for w in wrists):
+                        body_data["touch"]+=1
+    except Exception:
+        # a failed frame must never stop the camera
+        pass
+    return frame
+
+
+
+# body_lock=threading.Lock()
+# body_data={"n":0,"seen":0,"tilt":0.0,"away":0,"hands":0,"touch":0}
+
+# def reset_body_data():
+#     with body_lock:
+#         for k in body_data:
+#             body_data[k]=0
 
 
 #called after Submit Interview -> turns the counters into percentages and asks the LLM for the sentences
