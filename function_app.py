@@ -14,7 +14,7 @@ import speech_recognition as sr
 
 # the models
 MODEL="baidu/ernie-5.5-flash-preview:free"
-client=OpenAI(base_url="https://openrouter.ai/api/v1",api_key=st.secrets["OPENROUTER_KEY"])
+client=OpenAI(base_url="https://openrouter.ai/api/v1",api_key=st.secrets["OPENROUTER_KEY"],max_retries=6)
 
 
 
