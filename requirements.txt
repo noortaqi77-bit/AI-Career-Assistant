@@ -11,4 +11,3 @@ pdf2docx
 av
 trafilatura
 lxml_html_clean
-mediapipe
