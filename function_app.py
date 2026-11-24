@@ -8,6 +8,10 @@ import numpy as np
 import fitz
 import docx
 import speech_recognition as sr
+import math
+import os
+import threading
+import urllib.request
 
 
 # the models
@@ -183,3 +187,13 @@ def live_listen(ctx):
                 speaking=False
                 silence_frames=0
     return None
+
+try:
+    import mediapipe as mp
+    POSE_FILE="pose_landmarker_lite.task"
+    if not os.path.exists(POSE_FILE):
+        urllib.request.urlretrieve("https://huggingface.co/litert-community/MediaPipe-PoseLandmarker-Lite/resolve/main/pose_landmarker_lite.task", POSE_FILE)
+    landmarker=mp.tasks.vision.PoseLandmarker.create_from_options(
+        mp.tasks.vision.PoseLandmarkerOptions(base_options=mp.tasks.BaseOptions(model_asset_path=POSE_FILE)))
+except Exception:
+    landmarker=None
