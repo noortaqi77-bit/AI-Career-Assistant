@@ -286,7 +286,6 @@ with tab2:
             st.session_state.answers={}
             st.session_state.audio={}
             st.session_state.start_time=time.time()
-            reset_body_data()
             st.rerun()
 
         
@@ -316,8 +315,7 @@ with tab2:
         
         RTC={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
         with col_cam:
-            cam=webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False, video_frame_callback=body_frame_callback)
-            # webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
+             webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
             # webrtc_streamer(key="cam", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
         live=True
         if live:
@@ -399,10 +397,7 @@ with tab2:
                     c3.metric("Relevance", f"{result['relevance']}/10")
                     st.subheader("Overall Feedback")
                     st.markdown('<div class="jobcard">'+result["feedback"]+'</div>', unsafe_allow_html=True)
-                    body=body_feedback()
-                    if body:
-                        st.subheader("Body Language")
-                        st.markdown('<div class="jobcard">'+body+'</div>', unsafe_allow_html=True)
+                    
                 else:
                     st.warning("Please answer all 5 questions first.")
 
