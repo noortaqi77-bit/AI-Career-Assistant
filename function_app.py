@@ -8,10 +8,8 @@ import numpy as np
 import fitz
 import docx
 import speech_recognition as sr
-import math
-import os
-import threading
-import urllib.request
+
+
 
 
 # the models
@@ -188,89 +186,4 @@ def live_listen(ctx):
                 silence_frames=0
     return None
 
-try:
-    import mediapipe as mp
-    POSE_FILE="pose_landmarker_lite.task"
-    if not os.path.exists(POSE_FILE):
-        urllib.request.urlretrieve("https://huggingface.co/litert-community/MediaPipe-PoseLandmarker-Lite/resolve/main/pose_landmarker_lite.task", POSE_FILE)
-    landmarker=mp.tasks.vision.PoseLandmarker.create_from_options(
-        mp.tasks.vision.PoseLandmarkerOptions(base_options=mp.tasks.BaseOptions(model_asset_path=POSE_FILE)))
-except Exception:
-    landmarker=None
 
-
-body_lock=threading.Lock()
-body_data={"n":0,"seen":0,"tilt":0.0,"away":0,"hands":0,"touch":0}
-
-def reset_body_data():
-    with body_lock:
-        for k in body_data:
-            body_data[k]=0
-
-
-
- # runs on every camera frame ; it only measures and returns the frame as it is
-def body_frame_callback(frame):
-    
-    body_data["n"]+=1
-    # analyse only every 5th frame so the video does not get slow
-    if landmarker is None or body_data["n"]%5!=0:
-        return frame
-    try:
-        # the frame as an RGB picture , then MediaPipe finds the body points
-        rgb=frame.to_ndarray(format="rgb24")
-        result=landmarker.detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb))
-        if result.pose_landmarks:
-            p=result.pose_landmarks[0]
-            # point numbers from MediaPipe : 0 nose , 7 and 8 ears , 15 and 16 wrists
-            # head = the width of the head (distance between the ears) , used as a ruler
-            head=abs(p[7].x-p[8].x)
-            if head>0:
-                #only the wrists that MediaPipe can really see in the picture
-                wrists=[w for w in (p[15],p[16]) if w.visibility>0.5]
-                with body_lock:
-                    body_data["seen"]+=1
-                    # looking away : the nose is far from the middle of the two ears
-                    if abs(p[0].x-(p[7].x+p[8].x)/2)/head>0.25:
-                        body_data["away"]+=1
-                    # hands : at least one wrist is visible
-                    if wrists:
-                        body_data["hands"]+=1
-                    # touching the face: a wrist is closer to the nose than the width of the head
-                    if any(math.hypot(w.x-p[0].x,w.y-p[0].y)<head for w in wrists):
-                        body_data["touch"]+=1
-    except Exception:
-        #a failed frame must never stop the camera
-        pass
-    return frame
-
-
-
-# body_lock=threading.Lock()
-# body_data={"n":0,"seen":0,"tilt":0.0,"away":0,"hands":0,"touch":0}
-
-# def reset_body_data():
-#     with body_lock:
-#         for k in body_data:
-#             body_data[k]=0
-
-
-#called after Submit Interview -> turns the counters into percentages and asks the LLM for the sentences
-def body_feedback():
-    with body_lock:
-        d=dict(body_data)
-    # nobody was analysed [no camera, no mediapipe, or the body was not visible] will show nothing
-    if d["seen"]==0:
-        return ""
-    pct=lambda x: round(100*x/d["seen"])
-    numbers={"looking_away_from_camera_percent":pct(d["away"]),
-             "hands_visible_percent":pct(d["hands"]),
-             "hand_near_face_percent":pct(d["touch"])}
-    prompt=("You are an interview coach. Measurements from the candidate's webcam during a mock interview: "+str(numbers)+". "
-            "Write 3 short sentences of body-language feedback in the second person about looking at the camera, hands, and touching the face, "
-            "based ONLY on these numbers. Do not mention the numbers themselves.")
-    try:
-        r=client.with_options(max_retries=3).chat.completions.create(model=MODEL,messages=[{"role":"user","content":prompt}],max_tokens=300)
-        return (r.choices[0].message.content or "").strip()
-    except Exception:
-        return ""
