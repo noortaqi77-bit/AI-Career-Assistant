@@ -209,7 +209,7 @@ def reset_body_data():
 
 
 
- runs on every camera frame ; it only measures and returns the frame as it is
+ # runs on every camera frame ; it only measures and returns the frame as it is
 def body_frame_callback(frame):
     
     body_data["n"]+=1
