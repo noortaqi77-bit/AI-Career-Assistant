@@ -331,7 +331,8 @@ with tab2:
         
         RTC={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
         with col_cam:
-            cam=webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=True)
+            cam = webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False},desired_playing_state=True)
+            # cam=webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=True)
              # webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
             # webrtc_streamer(key="cam", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
         live=True
