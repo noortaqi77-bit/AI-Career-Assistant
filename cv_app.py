@@ -303,7 +303,7 @@ with tab2:
             st.rerun()
 
         
-    if "history" in st.session_state:
+    if "q_index" in st.session_state:
         i=st.session_state.q_index
         # question=st.session_state.questions[i]
         question=st.session_state.history[-1]["content"]
