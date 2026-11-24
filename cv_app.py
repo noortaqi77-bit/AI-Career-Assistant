@@ -348,10 +348,15 @@ with tab2:
         if i not in st.session_state.audio:
             st.session_state.audio[i]=speak(question)
         url=st.session_state.audio[i]
-        if url:
+        if url and cam.state.playing:
             st.markdown('<style>.st-key-noor_audio{display:none}</style>', unsafe_allow_html=True)
             with st.container(key="noor_audio"):
                 st.audio(url, autoplay=True)
+        q_slot.markdown(q_html, unsafe_allow_html=True)
+        # if url:
+        #     st.markdown('<style>.st-key-noor_audio{display:none}</style>', unsafe_allow_html=True)
+        #     with st.container(key="noor_audio"):
+        #         st.audio(url, autoplay=True)
            
 
 
