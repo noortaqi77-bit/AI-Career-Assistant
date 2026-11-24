@@ -14,7 +14,7 @@ import numpy as np
 import speech_recognition as sr
 import streamlit.components.v1 as components
 from pdf2docx import Converter
-from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy, live_listen
+from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy, live_listen,body_frame_callback, reset_body_data, body_feedback
 import av
 from trafilatura import fetch_url,extract
 
@@ -286,6 +286,7 @@ with tab2:
             st.session_state.answers={}
             st.session_state.audio={}
             st.session_state.start_time=time.time()
+            reset_body_data()
             st.rerun()
 
         
@@ -315,7 +316,8 @@ with tab2:
         
         RTC={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
         with col_cam:
-            webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
+            cam=webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False, video_frame_callback=body_frame_callback)
+            # webrtc_streamer(key="cam",rtc_configuration=RTC,media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
             # webrtc_streamer(key="cam", rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}, media_stream_constraints={"video": True, "audio": False}, desired_playing_state=True, media_toggle_controls=False)
         live=True
         if live:
@@ -397,6 +399,10 @@ with tab2:
                     c3.metric("Relevance", f"{result['relevance']}/10")
                     st.subheader("Overall Feedback")
                     st.markdown('<div class="jobcard">'+result["feedback"]+'</div>', unsafe_allow_html=True)
+                    body=body_feedback()
+                    if body:
+                        st.subheader("Body Language")
+                        st.markdown('<div class="jobcard">'+body+'</div>', unsafe_allow_html=True)
                 else:
                     st.warning("Please answer all 5 questions first.")
 
