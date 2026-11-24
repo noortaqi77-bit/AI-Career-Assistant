@@ -85,10 +85,22 @@ with tab1:
                  
             CV:
             {cv_text}"""
-        
-            cv_info=client.chat.completions.create(model=MODEL,messages=[{"role": "user","content": prompt}], max_tokens=3000)
-            text=cv_info.choices[0].message.content
-            cv_data=json.loads(text[text.find("{"):text.rfind("}")+1])
+            cv_data=None
+            for attempt in range(3):
+                cv_info=client.chat.completions.create(model=MODEL,messages=[{"role": "user","content": prompt}], max_tokens=3000)
+                text=cv_info.choices[0].message.content
+                if text:
+                    try:
+                        cv_data=json.loads(text[text.find("{"):text.rfind("}")+1])
+                        break
+                    except Exception:
+                        cv_data=None
+            if cv_data is None:
+                st.error("Please press Analyse again.")
+                st.stop()
+            # cv_info=client.chat.completions.create(model=MODEL,messages=[{"role": "user","content": prompt}], max_tokens=3000)
+            # text=cv_info.choices[0].message.content
+            # cv_data=json.loads(text[text.find("{"):text.rfind("}")+1])
             # cv_data=json.loads(cv_info.choices[0].message.content.replace("```json", "").replace("```", "").strip())
             st.session_state.cv_data=cv_data
         
