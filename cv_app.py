@@ -14,8 +14,7 @@ import numpy as np
 import speech_recognition as sr
 import streamlit.components.v1 as components
 from pdf2docx import Converter
-from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy, live_listen,body_frame_callback, reset_body_data, body_feedback
-import av
+from function_app import read_cv, speak, evaluate_answer, interviewer_reply, cv_feedback, cv_suggestions, apply_edits, frame_energy
 from trafilatura import fetch_url,extract
 
 
