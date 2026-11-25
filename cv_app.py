@@ -62,7 +62,7 @@ client=OpenAI(base_url="https://openrouter.ai/api/v1",api_key=st.secrets["OPENRO
 
 st.set_page_config(  page_title="AI Career Assistant",layout="wide")
 uploaded_file=st.file_uploader("   ", type=["pdf", "docx"])
-tab1, tab2, tab3=st.tabs(["CV Analysis", "Mock Interview","CV Check"])
+tab1, tab2, tab3=st.tabs(["Job Matching", "Mock Interview","CV Check"])
 
 
 
@@ -78,7 +78,7 @@ with tab1:
         
     
         
-        if st.button("Analyse"):
+        if st.button("Find Jobs"):
             cv_text=read_cv(uploaded_file.name)
             # extract the skills , education , experience and years:
             prompt=f"""Extract information from this CV. Return ONLY valid JSON with these keys: "skills" (list of technical skills),"soft_skills"(list),"education" (list), "experience" (list), "years_of_experience" (number).
@@ -227,12 +227,12 @@ with tab2:
     #new
     list_of_jobs=st.session_state.get("top_jobs", [])
     if "history" not in st.session_state:
-        source=st.segmented_control("Job source", ["Analysis results", "Enter a job", "CV only"], default="Analysis results", label_visibility="collapsed")
-        if source=="Analysis results":
+        source=st.segmented_control("Job source", ["Job matches", "Enter a job", "CV only"], default="Job matches", label_visibility="collapsed")
+        if source=="Job matches":
             title_jobs=[i["title"]+"  -  "+ str(i["company"]) for i in list_of_jobs]
             select_jobs=st.selectbox("select the job that ",title_jobs)
             chose=list_of_jobs[title_jobs.index(select_jobs)] if select_jobs else None
-            st.write(f"You choosed ",chose["title"] if chose else " nothing , do the analysis first")
+            st.write(f"You choosed ",chose["title"] if chose else " nothing , find jobs first")
         # second thing is by user's job , and i made the cv is optional <
         elif source=="Enter a job":
             custom_title=st.text_input("Job title")
