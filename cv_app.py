@@ -207,7 +207,7 @@ with tab1:
                       '<h3>'+job["job_title"]+'</h3>'
                       '<div class="jobmeta">'+str(jobs3.get("company_name"))+' · '+str(jobs3.get("location"))+'</div>'
                       '<div><b>Matched</b><br>'+matched+'</div>'
-                      '<div style="margin-top:8px"><b>Missing</b><br>'+missing+'</div>'
+                      +('<div style="margin-top:8px"><b>Missing</b><br>'+missing+'</div>' if job["missing_skills"] else "")+
                       '<div style="margin-top:12px">'+apply_btn+'</div>'
                       '</div>')
                 st.markdown(card, unsafe_allow_html=True)
